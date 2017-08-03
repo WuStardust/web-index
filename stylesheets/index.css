@@ -1,133 +1,209 @@
 li {
-	list-style: none;
+    list-style: none;
 }
 
 #title {
-	background-color: #3f51b5;
-	padding: 20px;
-	font-family: Times, serif;
-	font-size: 30px;
+    background-color: #3f51b5;
+    padding: 20px;
+    font-family: Times, serif;
+    font-size: 30px;
 }
 
 
 #add {
-	width: 70px;
-	height: 40px;
-	margin: 20px auto 0 auto;
-	font-size: 18px;
-	color: #000;
-	text-align: center;
-	line-height: 40px;
-	cursor: pointer;
-	background-color: #fff;
+    width: 70px;
+    height: 40px;
+    margin: 20px auto 0 auto;
+    font-size: 18px;
+    color: #000;
+    text-align: center;
+    line-height: 40px;
+    cursor: pointer;
+    background-color: #fff;
 }
 
 #add:hover {
-	color: #fff;
-	background-color: #3949ab;
+    color: #fff;
+    background-color: #3949ab;
 }
 
 
 #container {
-	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-	width: 700px;
-	margin: 10px auto 0 auto;
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    width: 700px;
+    margin: 10px auto 0 auto;
 }
 
 #container li {
-	position: relative;
-	margin-top: -1px;
-	line-height: 40px;
-	border: 1px solid #98bf21;
-	z-index: 2;
+    position: relative;
+    margin-top: -1px;
+    line-height: 40px;
+    border: 1px solid #98bf21;
+    z-index: 2;
 }
 
 #container li:hover div.operation {
-  display: inline-block;
+    display: inline-block;
 }
 
 #container span {
-	font-size: 18px;
-	width: 180px;
-	margin: 0 10px;
-	text-align: center;
-	display: inline-block;
-	vertical-align: middle;
-	*vertical-align: auto;
-	*zoom: 1;
-	*display: inline;
+    font-size: 18px;
+    width: 180px;
+    margin: 0 10px;
+    text-align: center;
+    display: inline-block;
+    vertical-align: middle;
+    *vertical-align: auto;
+    *zoom: 1;
+    *display: inline;
 }
 
 #container input {
-	font-size: 18px;
-	width: 168px;
-	margin: 0 10px;
-	padding: 0 5px;
-	border: 1px solid #aaa;
-	text-align: center;
-	display: none;
-	vertical-align: middle;
-	*vertical-align: auto;
-	*zoom: 1;
-	*display: inline;
-	outline: 0;
+    font-size: 18px;
+    width: 168px;
+    margin: 0 10px;
+    padding: 0 5px;
+    border: 1px solid #aaa;
+    text-align: center;
+    display: none;
+    vertical-align: middle;
+    *vertical-align: auto;
+    *zoom: 1;
+    *display: inline;
+    outline: 0;
 }
 
 #container input:focus {
-	border: 1px solid #98efdd;
+    border: 1px solid #98efdd;
 }
 
 #container li.head {
-	font-size: 1.1em;
-	background-color: #A7C942;
-	color: #ffffff;
+    font-size: 1.1em;
+    background-color: #A7C942;
+    color: #ffffff;
 }
 
 #container li.inf.alt {
-	color: #000000;
-	background-color: #EAF2D3;
+    color: #000000;
+    background-color: #EAF2D3;
 }
 
 #container .operation {
-	position: absolute;
-	top: 0;
-	right: 0;
-	width: 100px;
-	display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100px;
+    display: none;
 }
 
 #container .inline-block {
-	width: 40px;
-	height: 40px;
-	display: inline-block;
-	vertical-align: middle;
-	cursor: pointer;
-	*zoom: 1;
-	*display: inline;
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+    vertical-align: middle;
+    cursor: pointer;
+    *zoom: 1;
+    *display: inline;
 }
 
 
 #container .edit {
-  background: url("../images/edit.png") no-repeat center center;
+    background: url("../images/edit.png") no-repeat center center;
 }
 
 #container .edit:hover {
-  background-image: url("../images/edit_hover.png");
+    background-image: url("../images/edit_hover.png");
 }
 
 #container .delete {
-  background: url("../images/delete.png") no-repeat center center;
+    background: url("../images/delete.png") no-repeat center center;
 }
 
 #container .delete:hover {
-  background-image: url("../images/delete_hover.png");
+    background-image: url("../images/delete_hover.png");
 }
 
 #container .save {
-  display: none;
-  background: url("../images/save.png") no-repeat 0px center;
+    display: none;
+    background: url("../images/save.png") no-repeat 0px center;
 }
 /* line 96, ../sass/index.scss */
 #container .save:hover {
-  background: url("../images/save.png") no-repeat -63px center;
+    background: url("../images/save.png") no-repeat -63px center;
+}
+
+
+#add-inf-form {
+    position: absolute;
+    left: 50%;
+    top: -10%;
+    width: 300px;
+    
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+    opacity: 0;
+    
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    
+    padding: 10px 0;
+    background-color: rgba(111, 111, 111, 0.8);
+    
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    -webkit-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+    
+    z-index: 3;
+}
+
+#add-inf-form input {
+    display: block;
+    width: 180px;
+    margin: 10px auto;
+    padding: 2px 10px;
+    font-size: 16px;
+    color: #666;
+    outline: 0;
+    border: 1px solid #aaa;
+}
+
+#add-inf-form input[type="text"]:focus {
+    border: 1px solid #98efdd;
+}
+
+#add-inf-form input[type="submit"] {
+    width: 100px;
+    color: #fff;
+    background-color: #baedd8;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    border: 0;
+    cursor: pointer;
+}
+
+#add-inf-form input[type="submit"]:hover {
+    background-color: #54c3ab;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=82);
+    opacity: 0.82;
+}
+
+#add-inf-form .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 10px;
+    height: 10px;
+    background: url("../images/close.png") no-repeat center center;
+    cursor: pointer;
+}
+
+#add-inf-form .close:hover {
+    background-image: url("../images/close_hover.png");
 }
