@@ -10,7 +10,7 @@ def connDB():
     return (conn, cur)
 
 
-def exeUpdate(conn, cur, sql):
+def update(conn, cur, sql):
     # update / insert
     sta = cur.execute(sql)
     conn.commit()
@@ -18,7 +18,7 @@ def exeUpdate(conn, cur, sql):
     return (sta)
 
 
-def exeDelete(conn, cur, IDs):
+def delete(conn, cur, IDs):
     # delete one or more datas
     for eachID in IDs:
         sta = cur.execute('delete from index_test where Id=%d' % int(eachID))
@@ -28,10 +28,17 @@ def exeDelete(conn, cur, IDs):
     return sta
 
 
-def exeQuery(cur, sql):
+def query(cur, sql):
     # query datas
     cur.execute(sql)
     result = cur.fetchone()
+
+    return result
+
+
+def getAllInf(cur, sql):
+    cur.execute(sql)
+    result = cur.fetchall()
 
     return result
 

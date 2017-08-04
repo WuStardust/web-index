@@ -134,7 +134,7 @@ function updateInf(event) {
     else 
     {
         queryString = "id=" + parent.getAttribute('id') + "&name=" + name.value + "&number=" + number.value + "&phone=" + phone.value;
-        getData("PUT", "http://121.42.29.120:8989/info/modify", queryString, function() {
+        getData("PUT", "http://127.0.0.1:9055/info/modify", queryString, function() {
             if (xmlhttp.readyState == 4) {
                 if (xmlhttp.status == 200) {
                     var data = JSON.parse(xmlhttp.responseText);
@@ -151,15 +151,15 @@ function updateInf(event) {
 
 // getAll
 function getAllInf() {
-    getData("GET", "http://121.42.29.120:8989/info/list", null, function() {
+    getData("GET", "http://127.0.0.1:9055/info/list", null, function() {
         if (xmlhttp.readyState == 4) {
             if (xmlhttp.status == 200) {
-                var data = JSON.parse(xmlhttp.responseText).data;
+                var data = JSON.parse(xmlhttp.responseText);
                 var wrap = document.createDocumentFragment();
                 for (var i = 0; i < data.length; i++) {
                     createInfList(data[i], wrap);
                 }
-                document.querySelector("ul.container").appendChild(wrap);
+                document.getElementById('container').appendChild(wrap);
             } else {
                 console.log("发生错误" + xmlhttp.status);
             }
@@ -177,7 +177,7 @@ function createInfList(data, parent) {
     // <li>
     var list = document.createElement('li');            // 创建<li>
     
-    if (parent.lastchild.className == 'inf')            // set className
+    if (document.getElementById('container').lastElementChild.className == 'inf')            // set className
         list.className = "inf alt";
     else
         list.className = "inf";
@@ -412,11 +412,11 @@ addEvent(document.forms.addInf, "submit", function(event) {
         form.phone.focus();
     } else {
         console.log('jkhjkhjk');
-        getData("POST", "http://121.42.29.120:8989/info/add", getFormQueryString('addInf'), function() {
+        getData("POST", "http://127.0.0.1:9055/info/add", getFormQueryString('addInf'), function() {
             if (xmlhttp.readyState == 4) {
                 if (xmlhttp.status == 200) {
                     var data = JSON.parse(xmlhttp.responseText);
-                    if(data.status === 0) window.location.href = "";
+                    if(data === 0) window.location.href = "";
                 } else {
                     console.log("发生错误" + xmlhttp.status);
                 }
