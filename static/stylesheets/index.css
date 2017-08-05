@@ -28,6 +28,46 @@ li {
 }
 
 
+#search {
+    width: 500px;
+    height: 40px;
+    margin: 20px auto;
+    font-size: 13px;
+    text-align: center;
+}
+
+#search input {
+    display: inline-block;
+    width: 250px;
+    margin: 10px auto;
+    padding: 2px 10px;
+    color: #666;
+    outline: 0;
+    border: 1px solid #aaa;
+}
+
+#search input[type="text"]:focus {
+    border: 1px solid #98efdd;
+}
+
+#search input[type="submit"] {
+    width: 80px;
+    color: #fff;
+    background-color: #3f51b5;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    border: 0;
+    cursor: pointer;
+}
+
+#search input[type="submit"]:hover {
+    background-color: #3949ab;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=82);
+    opacity: 0.82;
+}
+
+
 #container {
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
     width: 700px;
@@ -130,6 +170,56 @@ li {
 /* line 96, ../sass/index.scss */
 #container .save:hover {
     background: url("../images/save.png") no-repeat -63px center;
+}
+
+
+#pages {
+    width: 420px;
+    margin: 30px auto;
+    font-size: 15px;
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+}
+
+#pages input {
+    outline: 0;
+}
+
+#pages .onePage {
+    width: 70px;
+    height: 20px;
+    color: #000;
+    text-align: center;
+    cursor: pointer;
+    background-color: #fff;    
+}
+
+#pages .onePage:hover {
+    color: #fff;
+    background-color: #A7C942;
+}
+
+#pages .enterPage {
+    width: 30px;
+    text-align: right;
+    border: 1px solid #aaa;
+}
+
+#pages .enterPage:focus {
+    border: 1px solid #98efdd;
+}
+
+#pages #goToPage {
+    height: 20px;
+    text-align: center;
+    cursor: pointer;
+}
+
+#pages #goToPage:hover {
+    background-color: #A7C942;
+}
+
+#pages span {
+
 }
 
 

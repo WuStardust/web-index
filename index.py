@@ -19,17 +19,16 @@ def update(conn, cur, sql):
     sta = cur.execute(sql)
     conn.commit()
 
-    return (sta)
+    return 0 if (sta == 1) else 1
 
 
-def delete(conn, cur, IDs):
-    # delete one or more datas
-    for eachID in IDs:
-        sta = cur.execute('delete from index_test where Id=%d' % int(eachID))
+def delete(conn, cur, ID):
+    # delete one data
+    sta = cur.execute('delete from index_test where Id=%d' % int(ID))
 
     conn.commit()
 
-    return sta
+    return 0 if (sta == 1) else 1
 
 
 def query(cur, sql):
@@ -40,7 +39,7 @@ def query(cur, sql):
     return result
 
 
-def getAllInf(cur, sql):
+def getInf(cur, sql):
     cur.execute(sql)
     result = cur.fetchall()
 
@@ -58,13 +57,188 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return render_template('index.html')
-
-
-@app.route('/info/list', methods=['GET'])
-def returnAllInf():
     conn, cur = connDB()
-    data = getAllInf(cur, "SELECT * FROM index_test;")
+    cur.execute("SELECT COUNT(*) FROM index_test;")
+    result = cur.fetchone()
+
+    connClose(conn, cur)
+
+    totalPage = int((int(result[0]) + 3 - 1) / 3)
+    curPage = 1
+
+    return render_template('index.html', total=totalPage, page=curPage)
+
+
+@app.route('/info/list/<int:curPage>', methods=['GET', 'PRE', 'NEXT', 'GOTO'])
+def returnAllInf(curPage):
+    conn, cur = connDB()
+    cur.execute("SELECT COUNT(*) FROM index_test")
+    result = cur.fetchone()
+
+    connClose(conn, cur)
+
+    totalPage = int((int(result[0]) + 3 - 1) / 3)
+
+    if (request.method == 'GET'):
+        conn, cur = connDB()
+        data = getInf(cur, "SELECT * FROM index_test LIMIT 0, 3;")
+        fields = cur.description
+        connClose(conn, cur)
+
+        column_list = []
+        for i in fields:
+            column_list.append(i[0])
+
+        JSONdata = []
+        i = 0
+        for inf in data:
+            result = {}
+            result['id'] = inf[0]
+            result['name'] = inf[1]
+            result['number'] = inf[2]
+            result['phone'] = inf[3]
+            JSONdata.append(result)
+        return json.dumps(JSONdata)
+
+    if (request.method == 'PRE'):
+        conn, cur = connDB()
+        if (curPage == 1):
+            data = getInf(cur, "SELECT * FROM index_test LIMIT 0, 3;")
+        else:
+            data = getInf(cur, "SELECT * FROM index_test LIMIT " + str((curPage - 2) * 3) + ", 3;")
+            curPage = curPage - 1
+
+        fields = cur.description
+
+        connClose(conn, cur)
+
+        column_list = []
+        for i in fields:
+            column_list.append(i[0])
+
+        JSONdata = []
+        i = 0
+        for inf in data:
+            result = {}
+            result['id'] = inf[0]
+            result['name'] = inf[1]
+            result['number'] = inf[2]
+            result['phone'] = inf[3]
+            JSONdata.append(result)
+        return json.dumps(JSONdata)
+
+    if (request.method == 'NEXT'):
+        conn, cur = connDB()
+        if (curPage == totalPage):
+            data = getInf(cur, "SELECT * FROM index_test LIMIT " + str((curPage - 1) * 3) + ", 3;")
+        else:
+            data = getInf(cur, "SELECT * FROM index_test LIMIT " + str(curPage * 3) + ", 3;")
+            curPage = curPage + 1
+
+        fields = cur.description
+
+        connClose(conn, cur)
+
+        column_list = []
+        for i in fields:
+            column_list.append(i[0])
+
+        JSONdata = []
+        i = 0
+        for inf in data:
+            result = {}
+            result['id'] = inf[0]
+            result['name'] = inf[1]
+            result['number'] = inf[2]
+            result['phone'] = inf[3]
+            JSONdata.append(result)
+        return json.dumps(JSONdata)
+
+    if (request.method == 'GOTO'):
+        conn, cur = connDB()
+        print(curPage, totalPage, curPage <= totalPage, curPage > 0, curPage > totalPage)
+        if ((curPage <= totalPage) and (curPage > 0)):
+            data = getInf(cur, "SELECT * FROM index_test LIMIT " + str((curPage - 1) * 3) + ", 3;")
+            print('a')
+        elif (curPage > totalPage):
+            data = getInf(cur, "SELECT * FROM index_test LIMIT " + str((totalPage - 1) * 3) + ", 3;")
+            print('b')
+        else:
+            data = getInf(cur, "SELECT * FROM index_test LIMIT " + str(0 * 3) + ", 3;")
+            print('c')
+
+        fields = cur.description
+
+        connClose(conn, cur)
+
+        column_list = []
+        for i in fields:
+            column_list.append(i[0])
+
+        JSONdata = []
+        i = 0
+        for inf in data:
+            result = {}
+            result['id'] = inf[0]
+            result['name'] = inf[1]
+            result['number'] = inf[2]
+            result['phone'] = inf[3]
+            JSONdata.append(result)
+        return json.dumps(JSONdata)
+
+
+@app.route('/info/modify', methods=['PUT'])
+def modifyInf():
+    conn, cur = connDB()
+    sql = "UPDATE index_test SET name='%s', number='%s', phone='%s' WHERE id='%s'" % (
+        request.form["name"], request.form["number"], request.form["phone"], request.form["id"])
+
+    sta = update(conn, cur, sql)
+
+    connClose(conn, cur)
+
+    return json.dumps(sta)
+
+
+@app.route('/info/add', methods=['POST'])
+def addInf():
+    conn, cur = connDB()
+
+    sql = "INSERT INTO index_test (name, number, phone) VALUES('%s', '%s', '%s');" % (
+        request.form["name"], request.form["number"], request.form["phone"])
+
+    sta = update(conn, cur, sql)
+
+    connClose(conn, cur)
+
+    return json.dumps(sta)
+
+
+@app.route('/info/delete/<int:del_id>', methods=['DELETE'])
+def deleteInf(del_id):
+    conn, cur = connDB()
+
+    ID = del_id
+
+    sta = delete(conn, cur, ID)
+
+    connClose(conn, cur)
+
+    return json.dumps(sta)
+
+
+@app.route('/info/search', methods=['SEARCH'])
+def searchInf():
+    conn, cur = connDB()
+
+    if (request.form["inf"] != ""):
+        sql = "SELECT * FROM index_test WHERE name LIKE '%" + request.form["inf"] + "%' "
+        sql += "OR number LIKE '%" + request.form["inf"] + "%'"
+        sql += "OR phone LIKE '%" + request.form["inf"] + "%';"
+    else:
+        sql = "SELECT * FROM index_test"
+
+    data = getInf(cur, sql)
     fields = cur.description
     connClose(conn, cur)
 
@@ -81,35 +255,9 @@ def returnAllInf():
         result['number'] = inf[2]
         result['phone'] = inf[3]
         JSONdata.append(result)
+
     return json.dumps(JSONdata)
 
 
-@app.route('/info/modify', methods=['PUT'])
-def modifyInf():
-    conn, cur = connDB()
-    sql = "UPDATE index_test SET name='%s', number='%s', phone='%s' WHERE id='%s'" % (
-        request.form["name"], request.form["number"], request.form["phone"], request.form["id"])
-
-    update(conn, cur, sql)
-
-    connClose(conn, cur)
-
-    return json.dumps(0)
-
-
-@app.route('/info/add', methods=['POST'])
-def addInf():
-    conn, cur = connDB()
-    # INSERT INTO index_test (name, number, phone) VALUES('bnmv', 'U201436579', '14325694213');"
-    sql = "INSERT INTO index_test (name, number, phone) VALUES('%s', '%s', '%s');" % (
-        request.form["name"], request.form["number"], request.form["phone"])
-
-    update(conn, cur, sql)
-
-    connClose(conn, cur)
-
-    return json.dumps(0)
-
-
 if __name__ == '__main__':
-    app.run(port=9055)
+    app.run(port=2386)

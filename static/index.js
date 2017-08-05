@@ -77,11 +77,11 @@ function deleteInf(event)
     var obj = event.target;
     
     // 向后台申请delete操作，同时刷新data
-    getData("DELETE", "http://121.42.29.120:8989/info/delete/" + obj.parentNode.parentNode.getAttribute('id'), null, function() {
+    getData("DELETE", "http://127.0.0.1:2386/info/delete/" + obj.parentNode.parentNode.getAttribute('id'), null, function() {
         if (xmlhttp.readyState == 4) {
             if (xmlhttp.status == 200) {
                 var data = JSON.parse(xmlhttp.responseText);
-                if(data.status === 0) obj.parentNode.parentNode.parentNode.removeChild(obj.parentNode.parentNode);
+                if(data === 0) obj.parentNode.parentNode.parentNode.removeChild(obj.parentNode.parentNode);
             } else {
                 console.log("发生错误" + xmlhttp.status);
             }
@@ -134,7 +134,7 @@ function updateInf(event) {
     else 
     {
         queryString = "id=" + parent.getAttribute('id') + "&name=" + name.value + "&number=" + number.value + "&phone=" + phone.value;
-        getData("PUT", "http://127.0.0.1:9055/info/modify", queryString, function() {
+        getData("PUT", "http://127.0.0.1:2386/info/modify", queryString, function() {
             if (xmlhttp.readyState == 4) {
                 if (xmlhttp.status == 200) {
                     var data = JSON.parse(xmlhttp.responseText);
@@ -149,9 +149,9 @@ function updateInf(event) {
     }
 }
 
-// getAll
+// getAllInf
 function getAllInf() {
-    getData("GET", "http://127.0.0.1:9055/info/list", null, function() {
+    getData("GET", "http://127.0.0.1:2386/info/list/1", null, function() {
         if (xmlhttp.readyState == 4) {
             if (xmlhttp.status == 200) {
                 var data = JSON.parse(xmlhttp.responseText);
@@ -177,10 +177,10 @@ function createInfList(data, parent) {
     // <li>
     var list = document.createElement('li');            // 创建<li>
     
-    if (document.getElementById('container').lastElementChild.className == 'inf')            // set className
-        list.className = "inf alt";
-    else
+    if (parent.lastElementChild == null || parent.lastElementChild.className == 'inf alt')     // set className
         list.className = "inf";
+    else
+        list.className = "inf alt";
     
     list.setAttribute('id', data.id);                   // 指定ID
     
@@ -266,7 +266,105 @@ function createInfList(data, parent) {
 
 /****************** seperate pages *******************/
 
+addEvent(document.querySelector('input[name = "pre"]'), "click", function(event) {
+    var obj = event.target;
+    pageNumber = obj.parentNode.lastElementChild.previousElementSibling.firstElementChild.innerHTML;
+    pageNumber = parseInt(pageNumber)
+    getData("PRE", "http://127.0.0.1:2386/info/list/" + pageNumber, null, function() {
+        if (xmlhttp.readyState == 4) {
+            if (xmlhttp.status == 200) {
+                
+                var Inf = document.getElementsByClassName("inf");
+                while (Inf.length > 0) {
+                    Inf[0].parentNode.removeChild(Inf[0]);
+                }
 
+                var data = JSON.parse(xmlhttp.responseText);
+                var wrap = document.createDocumentFragment();
+                for (var i = 0; i < data.length; i++) {
+                    createInfList(data[i], wrap);
+                }
+                document.getElementById('container').appendChild(wrap);
+                if (pageNumber != 1)
+                    obj.parentNode.lastElementChild.previousElementSibling.firstElementChild.innerHTML = pageNumber - 1;
+            } else {
+                console.log("发生错误" + xmlhttp.status);
+            }
+        }
+    });
+}, false);
+
+addEvent(document.querySelector('input[name = "next"]'), "click", function(event) {
+    var obj = event.target;
+    pageNumber = obj.previousElementSibling.firstElementChild.innerHTML;
+    pageNumber = parseInt(pageNumber);
+
+    totalPages = obj.previousElementSibling.lastElementChild.innerHTML;
+    totalPages = parseInt(totalPages);
+
+    getData("NEXT", "http://127.0.0.1:2386/info/list/" + pageNumber, null, function() {
+        if (xmlhttp.readyState == 4) {
+            if (xmlhttp.status == 200) {
+                
+                var Inf = document.getElementsByClassName("inf");
+                while (Inf.length > 0) {
+                    Inf[0].parentNode.removeChild(Inf[0]);
+                }
+
+                var data = JSON.parse(xmlhttp.responseText);
+                var wrap = document.createDocumentFragment();
+                for (var i = 0; i < data.length; i++) {
+                    createInfList(data[i], wrap);
+                }
+                document.getElementById('container').appendChild(wrap);
+                if (pageNumber != totalPages)
+                    obj.previousElementSibling.firstElementChild.innerHTML = pageNumber + 1;
+            } else {
+                console.log("发生错误" + xmlhttp.status);
+            }
+        }
+    });
+}, false);
+
+addEvent(document.querySelector('input[name = "goTo"]'), "click", function(event) {
+    var obj = event.target;
+    pageNumber = obj.nextElementSibling.value;
+    pageNumber = parseInt(pageNumber);
+
+    totalPages = obj.parentNode.lastElementChild.previousElementSibling.lastElementChild.innerHTML;
+    totalPages = parseInt(totalPages);
+
+    getData("GOTO", "http://127.0.0.1:2386/info/list/" + pageNumber, null, function() {
+        if (xmlhttp.readyState == 4) {
+            if (xmlhttp.status == 200) {
+                
+                var Inf = document.getElementsByClassName("inf");
+                while (Inf.length > 0) {
+                    Inf[0].parentNode.removeChild(Inf[0]);
+                }
+
+                var data = JSON.parse(xmlhttp.responseText);
+                var wrap = document.createDocumentFragment();
+                for (var i = 0; i < data.length; i++) {
+                    createInfList(data[i], wrap);
+                }
+                document.getElementById('container').appendChild(wrap);
+                if (pageNumber <= totalPages && pageNumber > 0) {
+                    obj.nextElementSibling.nextElementSibling.firstElementChild.innerHTML = pageNumber;
+                    obj.nextElementSibling.value = "";
+                } else if (pageNumber > totalPages) {
+                    obj.nextElementSibling.nextElementSibling.firstElementChild.innerHTML = totalPages;
+                    obj.nextElementSibling.value = "";
+                } else {
+                    obj.nextElementSibling.nextElementSibling.firstElementChild.innerHTML = 1;
+                    obj.nextElementSibling.value = "";
+                }
+            } else {
+                console.log("发生错误" + xmlhttp.status);
+            }
+        }
+    });
+}, false);
 
 /****************** seperate pages *******************/
 
@@ -321,6 +419,48 @@ function hideInputs(parent) {
 }
 
 /********************* 输入框操作 *********************/
+
+/********************** search **********************/
+
+addEvent(document.getElementById('search'), "submit", function(event) {
+    var form = document.getElementById('search'),
+    queryString = ""
+    if (form.inf.value) {
+        queryString = 'inf=' + form.inf.value;
+    }
+    console.log('qwqwqwqw');
+    if (queryString == ""){
+        window.location.href = "";
+        document.getElementById('pages').style.display = "block"
+    }
+    else {
+        getData("SEARCH", "http://127.0.0.1:2386/info/search", queryString, function() {
+                if (xmlhttp.readyState == 4) {
+                    if (xmlhttp.status == 200) {
+                        var data = JSON.parse(xmlhttp.responseText);
+                        
+                        var Inf = document.getElementsByClassName("inf");
+                        while (Inf.length > 0) {
+                            Inf[0].parentNode.removeChild(Inf[0]);
+                        }
+
+                        var wrap = document.createDocumentFragment();
+                        for (var i = 0; i < data.length; i++) {
+                            createInfList(data[i], wrap);
+                        }
+                        document.getElementById('container').appendChild(wrap);
+                        document.getElementById('pages').style.display = "none"
+                    } else {
+                        console.log("发生错误" + xmlhttp.status);
+                    }
+                }
+            }
+        ); 
+    }
+    forbiddenEvent(event);
+}, false);
+
+/********************** search **********************/
 
 /********************* add form *********************/
 
@@ -412,7 +552,7 @@ addEvent(document.forms.addInf, "submit", function(event) {
         form.phone.focus();
     } else {
         console.log('jkhjkhjk');
-        getData("POST", "http://127.0.0.1:9055/info/add", getFormQueryString('addInf'), function() {
+        getData("POST", "http://127.0.0.1:2386/info/add", getFormQueryString('addInf'), function() {
             if (xmlhttp.readyState == 4) {
                 if (xmlhttp.status == 200) {
                     var data = JSON.parse(xmlhttp.responseText);

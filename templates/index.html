@@ -11,6 +11,12 @@
 <body>
     <div id="title">通讯录</div>
     <div id="add">添加</div>
+    
+    <form name="searchInf" id="search">
+        <input type="submit" value="Search" id="searchInf">
+        <input type="text" name="inf" placeholder="请输入查询信息">
+    </form>
+    
     <ul id="container">
         <li class="head">
             <span title="name">姓名</span>
@@ -18,6 +24,14 @@
             <span title="phone">手机号码</span>
         </li>
     </ul>
+
+    <div id="pages" align="center">
+        <input type="submit" name="pre" title="previous page" value="上一页" class="onePage">
+        <input type="submit" name="goTo" value="Go" id="goToPage">
+        <input type="text" name="page" class="enterPage">
+        <span>第<span id="pageNumber">{{ page }}</span>页，共<span id="totalNumber">{{ total }}</span>页</span>
+        <input type="submit" name="next" title="next page" value="下一页" class="onePage">
+    </div>
 
     <form name="addInf" id="add-inf-form">
         <div class="close"></div>
