@@ -63,7 +63,7 @@ def home():
 
     connClose(conn, cur)
 
-    totalPage = int((int(result[0]) + 3 - 1) / 3)
+    totalPage = int((int(result[0]) + 4 - 1) / 4)
     curPage = 1
 
     return render_template('index.html', total=totalPage, page=curPage)
@@ -77,11 +77,11 @@ def returnAllInf(curPage):
 
     connClose(conn, cur)
 
-    totalPage = int((int(result[0]) + 3 - 1) / 3)
+    totalPage = int((int(result[0]) + 4 - 1) / 4)
 
     if (request.method == 'GET'):
         conn, cur = connDB()
-        data = getInf(cur, "SELECT * FROM index_test LIMIT 0, 3;")
+        data = getInf(cur, "SELECT * FROM index_test LIMIT 0, 4;")
         fields = cur.description
         connClose(conn, cur)
 
@@ -103,9 +103,9 @@ def returnAllInf(curPage):
     if (request.method == 'PRE'):
         conn, cur = connDB()
         if (curPage == 1):
-            data = getInf(cur, "SELECT * FROM index_test LIMIT 0, 3;")
+            data = getInf(cur, "SELECT * FROM index_test LIMIT 0, 4;")
         else:
-            data = getInf(cur, "SELECT * FROM index_test LIMIT " + str((curPage - 2) * 3) + ", 3;")
+            data = getInf(cur, "SELECT * FROM index_test LIMIT " + str((curPage - 2) * 4) + ", 4;")
             curPage = curPage - 1
 
         fields = cur.description
@@ -130,9 +130,9 @@ def returnAllInf(curPage):
     if (request.method == 'NEXT'):
         conn, cur = connDB()
         if (curPage == totalPage):
-            data = getInf(cur, "SELECT * FROM index_test LIMIT " + str((curPage - 1) * 3) + ", 3;")
+            data = getInf(cur, "SELECT * FROM index_test LIMIT " + str((curPage - 1) * 4) + ", 4;")
         else:
-            data = getInf(cur, "SELECT * FROM index_test LIMIT " + str(curPage * 3) + ", 3;")
+            data = getInf(cur, "SELECT * FROM index_test LIMIT " + str(curPage * 4) + ", 4;")
             curPage = curPage + 1
 
         fields = cur.description
@@ -158,13 +158,13 @@ def returnAllInf(curPage):
         conn, cur = connDB()
         print(curPage, totalPage, curPage <= totalPage, curPage > 0, curPage > totalPage)
         if ((curPage <= totalPage) and (curPage > 0)):
-            data = getInf(cur, "SELECT * FROM index_test LIMIT " + str((curPage - 1) * 3) + ", 3;")
+            data = getInf(cur, "SELECT * FROM index_test LIMIT " + str((curPage - 1) * 4) + ", 4;")
             print('a')
         elif (curPage > totalPage):
-            data = getInf(cur, "SELECT * FROM index_test LIMIT " + str((totalPage - 1) * 3) + ", 3;")
+            data = getInf(cur, "SELECT * FROM index_test LIMIT " + str((totalPage - 1) * 4) + ", 4;")
             print('b')
         else:
-            data = getInf(cur, "SELECT * FROM index_test LIMIT " + str(0 * 3) + ", 3;")
+            data = getInf(cur, "SELECT * FROM index_test LIMIT " + str(0 * 4) + ", 4;")
             print('c')
 
         fields = cur.description
@@ -260,4 +260,4 @@ def searchInf():
 
 
 if __name__ == '__main__':
-    app.run(port=2386)
+    app.run(host='127.0.0.1', port=8756)

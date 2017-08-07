@@ -77,7 +77,7 @@ function deleteInf(event)
     var obj = event.target;
     
     // 向后台申请delete操作，同时刷新data
-    getData("DELETE", "http://127.0.0.1:2386/info/delete/" + obj.parentNode.parentNode.getAttribute('id'), null, function() {
+    getData("DELETE", "/info/delete/" + obj.parentNode.parentNode.getAttribute('id'), null, function() {
         if (xmlhttp.readyState == 4) {
             if (xmlhttp.status == 200) {
                 var data = JSON.parse(xmlhttp.responseText);
@@ -134,7 +134,7 @@ function updateInf(event) {
     else 
     {
         queryString = "id=" + parent.getAttribute('id') + "&name=" + name.value + "&number=" + number.value + "&phone=" + phone.value;
-        getData("PUT", "http://127.0.0.1:2386/info/modify", queryString, function() {
+        getData("PUT", "/info/modify", queryString, function() {
             if (xmlhttp.readyState == 4) {
                 if (xmlhttp.status == 200) {
                     var data = JSON.parse(xmlhttp.responseText);
@@ -151,7 +151,7 @@ function updateInf(event) {
 
 // getAllInf
 function getAllInf() {
-    getData("GET", "http://127.0.0.1:2386/info/list/1", null, function() {
+    getData("GET", "/info/list/1", null, function() {
         if (xmlhttp.readyState == 4) {
             if (xmlhttp.status == 200) {
                 var data = JSON.parse(xmlhttp.responseText);
@@ -270,7 +270,7 @@ addEvent(document.querySelector('input[name = "pre"]'), "click", function(event)
     var obj = event.target;
     pageNumber = obj.parentNode.lastElementChild.previousElementSibling.firstElementChild.innerHTML;
     pageNumber = parseInt(pageNumber)
-    getData("PRE", "http://127.0.0.1:2386/info/list/" + pageNumber, null, function() {
+    getData("PRE", "/info/list/" + pageNumber, null, function() {
         if (xmlhttp.readyState == 4) {
             if (xmlhttp.status == 200) {
                 
@@ -302,7 +302,7 @@ addEvent(document.querySelector('input[name = "next"]'), "click", function(event
     totalPages = obj.previousElementSibling.lastElementChild.innerHTML;
     totalPages = parseInt(totalPages);
 
-    getData("NEXT", "http://127.0.0.1:2386/info/list/" + pageNumber, null, function() {
+    getData("NEXT", "/info/list/" + pageNumber, null, function() {
         if (xmlhttp.readyState == 4) {
             if (xmlhttp.status == 200) {
                 
@@ -334,7 +334,7 @@ addEvent(document.querySelector('input[name = "goTo"]'), "click", function(event
     totalPages = obj.parentNode.lastElementChild.previousElementSibling.lastElementChild.innerHTML;
     totalPages = parseInt(totalPages);
 
-    getData("GOTO", "http://127.0.0.1:2386/info/list/" + pageNumber, null, function() {
+    getData("GOTO", "/info/list/" + pageNumber, null, function() {
         if (xmlhttp.readyState == 4) {
             if (xmlhttp.status == 200) {
                 
@@ -434,7 +434,7 @@ addEvent(document.getElementById('search'), "submit", function(event) {
         document.getElementById('pages').style.display = "block"
     }
     else {
-        getData("SEARCH", "http://127.0.0.1:2386/info/search", queryString, function() {
+        getData("SEARCH", "/info/search", queryString, function() {
                 if (xmlhttp.readyState == 4) {
                     if (xmlhttp.status == 200) {
                         var data = JSON.parse(xmlhttp.responseText);
@@ -552,7 +552,7 @@ addEvent(document.forms.addInf, "submit", function(event) {
         form.phone.focus();
     } else {
         console.log('jkhjkhjk');
-        getData("POST", "http://127.0.0.1:2386/info/add", getFormQueryString('addInf'), function() {
+        getData("POST", "/info/add", getFormQueryString('addInf'), function() {
             if (xmlhttp.readyState == 4) {
                 if (xmlhttp.status == 200) {
                     var data = JSON.parse(xmlhttp.responseText);
